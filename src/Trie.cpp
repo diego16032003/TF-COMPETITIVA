@@ -18,26 +18,32 @@ void Trie::insertar(const std::string& palabra, Listing* alojamiento) {
     std::string palabraMin = aMinusculas(palabra);
 
     for (char letra : palabraMin) {
-        if (actual->hijos.find(letra) == actual->hijos.end()) {
-            actual->hijos[letra] = new TrieNode();
+        // Convertimos el caracter a su codigo ASCII (0-255)
+        unsigned char indice = static_cast<unsigned char>(letra);
+        
+        // Si el camino para esta letra esta vacio, creamos un nuevo nodo a mano
+        if (actual->hijos[indice] == nullptr) {
+            actual->hijos[indice] = new TrieNode();
         }
-        actual = actual->hijos[letra];
+        actual = actual->hijos[indice];
     }
-    // Al final de la palabra, guardamos el puntero al alojamiento
+    // Guardamos el alojamiento al final de la palabra
     actual->alojamientos.push_back(alojamiento);
 }
 
 void Trie::recolectar(TrieNode* nodo, std::vector<Listing*>& resultados) {
     if (!nodo) return;
     
-    // Agregar los alojamientos de este nodo
+    // Agregar los alojamientos guardados en este nodo exacto
     for (Listing* aloj : nodo->alojamientos) {
         resultados.push_back(aloj);
     }
     
-    // Búsqueda recursiva (DFS) en todos los hijos
-    for (auto& par : nodo->hijos) {
-        recolectar(par.second, resultados);
+    // Recorremos los 256 caminos posibles de forma recursiva (DFS)
+    for (int i = 0; i < 256; i++) {
+        if (nodo->hijos[i] != nullptr) {
+            recolectar(nodo->hijos[i], resultados);
+        }
     }
 }
 
@@ -46,15 +52,18 @@ std::vector<Listing*> Trie::buscarPorPrefijo(const std::string& prefijo) {
     std::vector<Listing*> resultados;
     std::string prefijoMin = aMinusculas(prefijo);
 
-    // Navegar hasta el final del prefijo ingresado
+    // Navegar letra por letra hasta el final del prefijo ingresado
     for (char letra : prefijoMin) {
-        if (actual->hijos.find(letra) == actual->hijos.end()) {
-            return resultados; // No hay coincidencias, retorna vector vacío
+        unsigned char indice = static_cast<unsigned char>(letra);
+        
+        // Si chocamos con un camino vacío (nulo), la palabra no existe
+        if (actual->hijos[indice] == nullptr) {
+            return resultados; // Retorna el vector vacío rápidamente
         }
-        actual = actual->hijos[letra];
+        actual = actual->hijos[indice];
     }
 
-    // Recolectar todas las palabras que completan este prefijo
+    // Una vez llegamos al final del prefijo, recolectamos todas las ramificaciones
     recolectar(actual, resultados);
     return resultados;
 }

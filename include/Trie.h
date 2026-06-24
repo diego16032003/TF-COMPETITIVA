@@ -1,22 +1,26 @@
 #pragma once
-#include <unordered_map>
 #include <vector>
 #include <string>
 #include "Listing.h"
 
-// Nodo del Árbol de Prefijos
+// Nodo del Arbol de Prefijos Clasico 
 struct TrieNode {
-    std::unordered_map<char, TrieNode*> hijos;
-    std::vector<Listing*> alojamientos; // Alojamientos que coinciden hasta esta letra
+    // Un puntero para cada caracter posible
+    TrieNode* hijos[256]; 
+    std::vector<Listing*> alojamientos; // Alojamientos que terminan en esta rama
+
+    // Constructor del nodo: inicializa todos los caminos en nulo
+    TrieNode() {
+        for (int i = 0; i < 256; i++) {
+            hijos[i] = nullptr;
+        }
+    }
 };
 
-// Clase Trie (Capa 3 y 6)
 class Trie {
 private:
     TrieNode* raiz;
-    // Función recursiva para buscar todas las ramificaciones de un prefijo
     void recolectar(TrieNode* nodo, std::vector<Listing*>& resultados);
-    // Función auxiliar para convertir a minúsculas
     std::string aMinusculas(const std::string& texto);
 
 public:

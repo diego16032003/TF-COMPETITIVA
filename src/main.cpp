@@ -11,9 +11,9 @@ void mostrarMenu() {
     std::cout << "\n=====================================" << std::endl;
     std::cout << "    SISTEMA INTELIGENTE AIRBNB       " << std::endl;
     std::cout << "=====================================" << std::endl;
-    std::cout << "1. Buscar alojamiento por ID Exacto (O(1))" << std::endl;
-    std::cout << "2. Buscar alojamientos por Nombre (O(L))" << std::endl;
-    std::cout << "3. Ver los Top K alojamientos mas baratos (Heaps)" << std::endl;
+    std::cout << "1. Buscar alojamiento por ID Exacto " << std::endl;
+    std::cout << "2. Buscar alojamientos por Nombre " << std::endl;
+    std::cout << "3. Ver los Top K alojamientos mas baratos" << std::endl;
     std::cout << "4. Salir" << std::endl;
     std::cout << "Elija una opcion: ";
 }
